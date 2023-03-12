@@ -1,0 +1,38 @@
+---
+title: "Tutorial 1 Creating Geographic Databases"
+author: "Alex Takoudes"
+date: "2023-02-17"
+output: html_document
+---
+
+#### This tutorial is a good example to come back to for how to create a simplified version of other projects
+#### All **Shape** files need to be renamed and moved together. This includes `.shp`, `.shx` etc
+
+## Starting the Project!
+* Starts with one layer called point grid which will guide us
+
+#### Panels
+1. Browser
+2. Layers
+3. Processing Toolbox
+
+#### Toolbar
+1. Attributes
+2. Digitizing
+3. Map Nav
+4. Project
+5. Selection
+6. Snapping
+
+* To change visualization, right click, properties, symbology
+* `zoom full` snaps the map fullscreen
+* Inspector tool can tell you the data that's on the point
+* You can select dots on the map, right click on the layer and open the attribute table and they'll be highlighted
+* When you save a project, you're just saving the styling
+* To create data, you need a different process
+
+## Digitizing Zones
+* Check to make sure the EPSG is the same that you are mapping with
+
+## Creating Fields List
+* Length should be as long as the longest word

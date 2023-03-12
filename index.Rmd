@@ -1,0 +1,11 @@
+---
+title: "GIS 120"
+author: "Alex Takoudes"
+date: "2023-03-12"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+[Independent Problem 1](Problem1/Ind_prob1_tables.html)

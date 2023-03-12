@@ -2,8 +2,13 @@
 title: "Takoudes Independent Problem 1"
 author: "Alex Takoudes"
 date: "2023-03-12"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
 ---
+
+
 
 ```{r}
 dist1940 <- read.csv(file="1940DistVal.csv", header=T)

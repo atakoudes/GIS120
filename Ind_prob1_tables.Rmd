@@ -16,9 +16,9 @@ library(tidyverse)
 library(gt)
 
 dist1940 <- read.csv(file="Problem1/1940DistVal.csv", header=T)
-dist2020 <- read.csv(file="Problem1/2020DistVal.csv", header=T)
+dist2020 <- read.csv(file="Problem1/2020DistVal(r).csv", header=T)
 median1940 <- read.csv(file="Problem1/1940MajorValue.csv", header=T)
-median2020 <- read.csv(file="Problem1/2020MajorValue.csv", header=T)
+median2020 <- read.csv(file="Problem1/2020MajorValue(r).csv", header=T)
 
 
 

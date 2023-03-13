@@ -8,4 +8,4 @@ output:
     highlight: github
 ---
 
-[Independent Problem 1](Problem1/Ind_prob1_tables.html)
+[Independent Problem 1](Ind_prob1_tables.html)

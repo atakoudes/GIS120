@@ -12,33 +12,36 @@ output:
 ![](Problem1/indp1_2.png)
 
 ```{r}
+library(tidyverse)
+library(gt)
+
 dist1940 <- read.csv(file="Problem1/1940DistVal.csv", header=T)
 dist2020 <- read.csv(file="Problem1/2020DistVal.csv", header=T)
 median1940 <- read.csv(file="Problem1/1940MajorValue.csv", header=T)
 median2020 <- read.csv(file="Problem1/2020MajorValue.csv", header=T)
 
-library(tidyverse)
+
 
 median1940 <- median1940 %>%
-  mutate(avgmedValu = round(avgmedValu, 2)) %>%
-  select(-cntmedValu) %>%
-  select(iso_major, featCount, avgmedValu)
+  mutate(avgmedValu = round(avgmedValu, 2)) %>% #round off the home values to two digits
+  select(-cntmedValu) %>%                       #get rid of the duplicate feature count column
+  select(iso_major, featCount, avgmedValu)      #re-order the race classes to the front
 
 median2020 <- median2020 %>%
   mutate(avgmedValu = round(avgmedValu, 2)) %>%
   select(-cntmedValu) %>%
   select(iso_major, featCount, avgmedValu)
 
-median_table <- left_join(median1940, median2020, by = "iso_major")
+median_table <- left_join(median1940, median2020, by = "iso_major") #join the two smaller tables above into one large table
 
 dist1940 <- dist1940 %>%
-  mutate(avgmedValu = round(avgmedValu, 2)) %>%
-  select(-c(cntmedValu, featCount)) %>%
+  mutate(avgmedValu = round(avgmedValu, 2)) %>%    #round off the home values to two digits
+  select(-c(cntmedValu, featCount)) %>%            #get rid of the duplicate columns
   pivot_wider(
-    names_from = iso_major, 
-    values_from = avgmedValu,
+    names_from = iso_major,                        #pivot wider, make isolated groups into columns
+    values_from = avgmedValu,                      #translate the median home values
   ) %>%
-  arrange(by=as.integer(substr(distgrp, 1, 2)))
+  arrange(by=as.integer(substr(distgrp, 1, 2)))    #take the first two numbers from distance groups as integers and arrange in numerical order
 
 
 
@@ -53,7 +56,7 @@ dist2020 <- dist2020 %>%
 ```
 
 ```{r}
-library(gt)
+
 gt_median <- gt(median_table) %>%
   tab_header(title = "Average of median home value for owner-occupied houses in St. Louis, MO in 1940 and 2020") %>%
   cols_label(
@@ -63,7 +66,7 @@ gt_median <- gt(median_table) %>%
     featCount.y = "Feature Count (2020)", 
     avgmedValu.y = "Average Median Home Value (2020)"
   ) %>%
-  cols_align(align = "center", columns = everything()) %>%
+  cols_align(align = "center", columns = everything()) %>%     #center align columns
   fmt_currency(
     columns = c(avgmedValu.x, avgmedValu.y),
     currency = "USD"

@@ -139,16 +139,19 @@
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{median1940 }\OtherTok{\textless{}{-}}\NormalTok{ median1940 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{avgmedValu =} \FunctionTok{round}\NormalTok{(avgmedValu, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{cntmedValu) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(iso\_major, featCount, avgmedValu)}
 
 \NormalTok{median2020 }\OtherTok{\textless{}{-}}\NormalTok{ median2020 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{avgmedValu =} \FunctionTok{round}\NormalTok{(avgmedValu, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{cntmedValu) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(iso\_major, featCount, avgmedValu)}
 
 \NormalTok{median\_table }\OtherTok{\textless{}{-}} \FunctionTok{left\_join}\NormalTok{(median1940, median2020, }\AttributeTok{by =} \StringTok{"iso\_major"}\NormalTok{)}
 
 \NormalTok{dist1940 }\OtherTok{\textless{}{-}}\NormalTok{ dist1940 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{avgmedValu =} \FunctionTok{round}\NormalTok{(avgmedValu, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(cntmedValu, featCount)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{pivot\_wider}\NormalTok{(}
     \AttributeTok{names\_from =}\NormalTok{ iso\_major, }
@@ -156,7 +159,10 @@
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{arrange}\NormalTok{(}\AttributeTok{by=}\FunctionTok{as.integer}\NormalTok{(}\FunctionTok{substr}\NormalTok{(distgrp, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)))}
 
+
+
 \NormalTok{dist2020 }\OtherTok{\textless{}{-}}\NormalTok{ dist2020 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{avgmedValu =} \FunctionTok{round}\NormalTok{(avgmedValu, }\DecValTok{2}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(cntmedValu, featCount)) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{pivot\_wider}\NormalTok{(}
     \AttributeTok{names\_from =}\NormalTok{ iso\_major, }
@@ -178,7 +184,11 @@
     \AttributeTok{featCount.y =} \StringTok{"Feature Count (2020)"}\NormalTok{, }
     \AttributeTok{avgmedValu.y =} \StringTok{"Average Median Home Value (2020)"}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{())}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{()) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_currency}\NormalTok{(}
+    \AttributeTok{columns =} \FunctionTok{c}\NormalTok{(avgmedValu.x, avgmedValu.y),}
+    \AttributeTok{currency =} \StringTok{"USD"}
+\NormalTok{  )}
 
 \NormalTok{gt\_dist1940 }\OtherTok{\textless{}{-}} \FunctionTok{gt}\NormalTok{(dist1940) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{tab\_header}\NormalTok{(}\AttributeTok{title =} \StringTok{"Average of median home value for owner{-}occupied houses in St. Louis, MO in 1940"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
@@ -186,7 +196,15 @@
     \AttributeTok{distgrp =} \StringTok{"Distance from CBD (km)"}\NormalTok{,}
     \AttributeTok{count =} \StringTok{"Feature Count"}\NormalTok{,}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{())}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{())}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_currency}\NormalTok{(}
+    \AttributeTok{columns =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{),}
+    \AttributeTok{currency =} \StringTok{"USD"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_move}\NormalTok{(}
+    \AttributeTok{columns =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{after =} \DecValTok{4}
+\NormalTok{  )}
 
 \NormalTok{gt\_dist2020 }\OtherTok{\textless{}{-}} \FunctionTok{gt}\NormalTok{(dist2020) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{tab\_header}\NormalTok{(}\AttributeTok{title =} \StringTok{"Average of median home value for owner{-}occupied houses in St. Louis, MO in 2020"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
@@ -194,7 +212,15 @@
     \AttributeTok{distgrp =} \StringTok{"Distance from CBD (km)"}\NormalTok{,}
     \AttributeTok{count =} \StringTok{"Feature Count"}\NormalTok{,}
 \NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
-  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{())}
+  \FunctionTok{cols\_align}\NormalTok{(}\AttributeTok{align =} \StringTok{"center"}\NormalTok{, }\AttributeTok{columns =} \FunctionTok{everything}\NormalTok{())}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fmt\_currency}\NormalTok{(}
+    \AttributeTok{columns =} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\SpecialCharTok{:}\DecValTok{6}\NormalTok{),}
+    \AttributeTok{currency =} \StringTok{"USD"}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cols\_move}\NormalTok{(}
+    \AttributeTok{columns =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{after =} \DecValTok{4}
+\NormalTok{  )}
 
 \NormalTok{gt\_median}
 \end{Highlighting}
@@ -207,10 +233,10 @@
 \toprule
 Majority Group & Feature Count (1940) & Average Median Home Value (1940) & Feature Count (2020) & Average Median Home Value (2020) \\ 
 \midrule
-Isolated Black & 9 & 1357.889 & 71 & 75926.76 \\ 
-Isolated White & 198 & 4144.904 & 144 & 274204.17 \\ 
-Mixed Black & 3 & 1956.333 & 36 & 127780.56 \\ 
-Mixed White & 6 & 1378.667 & 69 & 186571.01 \\ 
+Isolated Black & 9 & $\text{\$}1,357.89$ & 71 & $\text{\$}75,926.76$ \\ 
+Isolated White & 198 & $\text{\$}4,144.90$ & 144 & $\text{\$}274,204.17$ \\ 
+Mixed Black & 3 & $\text{\$}1,956.33$ & 36 & $\text{\$}127,780.56$ \\ 
+Mixed White & 6 & $\text{\$}1,378.67$ & 69 & $\text{\$}186,571.01$ \\ 
 \bottomrule
 \end{longtable}
 
@@ -225,13 +251,13 @@ Mixed White & 6 & 1378.667 & 69 & 186571.01 \\
 {\large Average of median home value for owner-occupied houses in St. Louis, MO in 1940}
 } \\ 
 \toprule
-Distance from CBD (km) & Feature Count & Isolated Black & Isolated White & Mixed Black & Mixed White \\ 
+Distance from CBD (km) & Feature Count & Isolated Black & Isolated White & Mixed White & Mixed Black \\ 
 \midrule
-0 to 3 & 24 & 904.8333 & 1331.846 & 1959.5 & 1405 \\ 
-3 to 5 & 25 & 2798.0000 & 2716.087 & NA & NA \\ 
-5 to 10 & 77 & NA & 4116.658 & NA & 2601 \\ 
-10 to 15 & 45 & NA & 5281.659 & 1950.0 & NA \\ 
-15 or more & 45 & 1196.0000 & 4658.286 & NA & 728 \\ 
+0 to 3 & 24 & $\text{\$}904.83$ & $\text{\$}1,331.85$ & $\text{\$}1,405.00$ & $\text{\$}1,959.50$ \\ 
+3 to 5 & 25 & $\text{\$}2,798.00$ & $\text{\$}2,716.09$ & NA & NA \\ 
+5 to 10 & 77 & NA & $\text{\$}4,116.66$ & $\text{\$}2,601.00$ & NA \\ 
+10 to 15 & 45 & NA & $\text{\$}5,281.66$ & NA & $\text{\$}1,950.00$ \\ 
+15 or more & 45 & $\text{\$}1,196.00$ & $\text{\$}4,658.29$ & $\text{\$}728.00$ & NA \\ 
 \bottomrule
 \end{longtable}
 
@@ -246,13 +272,13 @@ Distance from CBD (km) & Feature Count & Isolated Black & Isolated White & Mixed
 {\large Average of median home value for owner-occupied houses in St. Louis, MO in 2020}
 } \\ 
 \toprule
-Distance from CBD (km) & Feature Count & Isolated Black & Isolated White & Mixed Black & Mixed White \\ 
+Distance from CBD (km) & Feature Count & Isolated Black & Isolated White & Mixed White & Mixed Black \\ 
 \midrule
-0 to 3 & 11 & 152475.00 & 179600.0 & 186700.0 & 208166.7 \\ 
-3 to 5 & 21 & 55328.57 & NA & 184550.0 & 245825.0 \\ 
-5 to 10 & 65 & 67704.35 & 213957.9 & 108466.7 & 210923.5 \\ 
-10 to 15 & 69 & 64321.74 & 257885.3 & 122316.7 & 213600.0 \\ 
-15 or more & 154 & 96928.57 & 295425.8 & 108418.8 & 154714.3 \\ 
+0 to 3 & 11 & $\text{\$}152,475.00$ & $\text{\$}179,600.00$ & $\text{\$}208,166.67$ & $\text{\$}186,700.00$ \\ 
+3 to 5 & 21 & $\text{\$}55,328.57$ & NA & $\text{\$}245,825.00$ & $\text{\$}184,550.00$ \\ 
+5 to 10 & 65 & $\text{\$}67,704.35$ & $\text{\$}213,957.89$ & $\text{\$}210,923.53$ & $\text{\$}108,466.67$ \\ 
+10 to 15 & 69 & $\text{\$}64,321.74$ & $\text{\$}257,885.29$ & $\text{\$}213,600.00$ & $\text{\$}122,316.67$ \\ 
+15 or more & 154 & $\text{\$}96,928.57$ & $\text{\$}295,425.84$ & $\text{\$}154,714.29$ & $\text{\$}108,418.75$ \\ 
 \bottomrule
 \end{longtable}
 

@@ -8,7 +8,8 @@ output:
   word_document: default
 ---
 
-
+![](Problem1/indp1_1.png)
+![](Problem1/indp1_2.png)
 
 ```{r}
 dist1940 <- read.csv(file="Problem1/1940DistVal.csv", header=T)

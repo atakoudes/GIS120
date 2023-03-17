@@ -15,8 +15,8 @@ output:
 library(tidyverse)
 library(gt)
 
-dist1940 <- read.csv(file="Problem1/1940DistVal.csv", header=T)
-dist2020 <- read.csv(file="Problem1/2020DistVal(r).csv", header=T)
+distance1940 <- read.csv(file="Problem1/1940DistVal.csv", header=T)
+distance2020 <- read.csv(file="Problem1/2020DistVal(r).csv", header=T)
 median1940 <- read.csv(file="Problem1/1940MajorValue.csv", header=T)
 median2020 <- read.csv(file="Problem1/2020MajorValue(r).csv", header=T)
 
@@ -34,7 +34,7 @@ median2020 <- median2020 %>%
 
 median_table <- left_join(median1940, median2020, by = "iso_major") #join the two smaller tables above into one large table
 
-dist1940 <- dist1940 %>%
+dist1940 <- distance1940 %>%
   mutate(avgmedValu = round(avgmedValu, 2)) %>%    #round off the home values to two digits
   select(-c(cntmedValu, featCount)) %>%            #get rid of the duplicate columns
   pivot_wider(
@@ -45,7 +45,7 @@ dist1940 <- dist1940 %>%
 
 
 
-dist2020 <- dist2020 %>%
+dist2020 <- distance2020 %>%
   mutate(avgmedValu = round(avgmedValu, 2)) %>%
   select(-c(cntmedValu, featCount)) %>%
   pivot_wider(
@@ -107,4 +107,122 @@ gt_dist2020 <- gt(dist2020) %>%
 gt_median
 gt_dist1940
 gt_dist2020
+```
+
+```{r}
+distgroups_2020 <- distance2020 %>%
+  mutate(overunder = case_when(
+  distgrp == '15 or more' ~ 'Over 15',
+  TRUE ~ 'Under 15',)) %>%
+  group_by(overunder, iso_major) %>% 
+  summarize(mean_val = mean(avgmedValu))
+  
+gt_distgroups_2020 <- gt(distgroups_2020)
+  
+  
+gt_distgroups_2020
+```
+
+```{r}
+over300 <- read.csv(file="Problem1/over300.csv", header=T)
+
+over300 <- over300 %>%
+  group_by(majorgrp) %>%
+  summarize(Count = n()) %>%
+  arrange(by = desc(Count)) %>%
+  gt() %>%
+  tab_header(title = "Number of Tracts Over $300,000 by Race") %>%
+  cols_label(majorgrp = "Majority Group") %>%
+  cols_align(align = "center")
+
+over300
+```
+
+```{r}
+under100 <- read.csv(file="Problem1/under100.csv", header=T)
+
+under100 <- under100 %>%
+  group_by(majorgrp) %>%
+  summarize(Count = n()) %>%
+  arrange(by = desc(Count)) %>%
+  gt() %>%
+  tab_header(title = "Number of Tracts Under $100,000 by Race") %>%
+  cols_label(majorgrp = "Majority Group") %>%
+  cols_align(align = "center")
+
+under100
+```
+
+```{r}
+#creating percentage columns
+
+whiteval1940 <- median_table$avgmedValu.x[[2]]
+whiteval2020 <- median_table$avgmedValu.y[[2]]
+
+pctVal <- median_table %>%
+  mutate(pct1940 = avgmedValu.x/whiteval1940) %>%
+  mutate(pct2020 = avgmedValu.y/whiteval2020) %>%
+  select(iso_major, pct1940, pct2020) %>%
+  arrange(by = desc(pct2020)) %>%
+  gt() %>%
+  fmt_percent(columns = c(pct1940, pct2020)) %>%
+  tab_header(title = "Median Home Value in 1940 and 2020 Standardized to Isolated White Home Value") %>%
+  cols_label(
+    iso_major = "Majority Group", 
+    pct1940 = "% of Isolated White (1940)",
+    pct2020 = "% of Isolated White (2020)"
+  ) %>%
+  cols_align(align = "center")
+            
+pctVal
+```
+
+```{r}
+library(viridis)
+distance1940 <- rename(distance1940, cnt = cntmedValu)
+distance2020 <- rename(distance2020, cnt = cntmedValu)
+
+dista1940 <- distance1940 %>%
+  mutate(majorgrp = case_when(
+    iso_major == 'Isolated Black' ~ 'Black',
+    iso_major == 'Mixed Black' ~ 'Black',
+    TRUE ~ 'White',)) %>% 
+  add_row(featCount = 0, iso_major = NA, distgrp = '5 to 10', cnt = 0, avgmedValu = 0, count = 0, majorgrp = 'Black') %>%
+  group_by(distgrp) %>%
+  summarize(med_value= mean(avgmedValu), cnt = cnt, majorgrp)
+
+dista2020 <- distance2020 %>%
+  mutate(majorgrp = case_when(
+    iso_major == 'Isolated Black' ~ 'Black',
+    iso_major == 'Mixed Black' ~ 'Black',
+    TRUE ~ 'White',)) %>%
+  group_by(distgrp) %>%
+  summarize(med_value= mean(avgmedValu), cnt = cnt, majorgrp)
+
+
+
+distplot1940 <- dista1940 %>%
+  ggplot(aes(x=reorder(distgrp, as.integer(substr(distgrp, 1, 2))), y=cnt)) +
+  geom_bar(aes(fill = majorgrp), stat = "identity", position = "dodge") +
+  theme_minimal() + 
+  labs(title = "Number of Tracts by Distance Category 1940", fill = "Majority Group") +
+  xlab("Distance Group (km)") +
+  ylab("Count") +
+  scale_fill_manual(values = c( "#269e3e", "#88269e")) +
+  scale_y_continuous(limit = c(0, 105))
+
+distplot1940
+# 
+
+distplot2020 <- dista2020 %>%
+  ggplot(aes(x=reorder(distgrp, as.integer(substr(distgrp, 1, 2))), y=cnt)) +
+  geom_bar(aes(fill = majorgrp), stat = "identity", position = "dodge") +
+  theme_minimal() + 
+  labs(title = "Number of Tracts by Distance Category 2020", fill = "Majority Group") +
+  xlab("Distance Group (km)") +
+  ylab("Count") +
+  scale_fill_manual(values = c( "#269e3e", "#88269e")) +
+  scale_y_continuous(limit = c(0, 105))
+
+distplot2020
 ```

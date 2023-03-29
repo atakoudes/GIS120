@@ -8,4 +8,13 @@ output:
     highlight: github
 ---
 
+
+### WK05
+
 [Independent Problem 1](Ind_prob1_tables.html)
+
+### WK07
+
+[Lab 7](Lab07_Tables.html)
+
+### WK08

@@ -18,3 +18,5 @@ output:
 [Lab 7](Lab07_Tables.html)
 
 ### WK08
+
+[Lab 8](Lab08_Tables.html)

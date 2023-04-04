@@ -1,0 +1,44 @@
+---
+title: "Lab 8 Tables"
+author: "Alex Takoudes"
+date: "2023-04-03"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+
+tree_school_table <- read.csv(file = "major_green_histogram.csv", header=T) %>%
+  arrange(by = desc(Area)) %>%
+  select(-canopysum)
+library(gt)
+```
+
+```{r}
+gt_table <- gt(tree_school_table) %>%
+  tab_header(title = "Table 1: Tree Canopy and School Access to Parks by Majority Groups in Chicago") %>%
+  cols_label(
+    majorGroup = "Majority Group",
+    Area = "Area (sqm)",
+    grnarea = "Greenspace Area (sqm)",
+    NEW_ID_cou = "Number of Schools",
+    access_cou = "Schools with Access",
+    canopyarea = "Canopy Area (sqm)",
+    pctcanopy = "Percent Canopy",
+    grncanopy = "Green Space Canopy Area (sqm)",
+    pctgrncano = "Percent Greenspace Canopy Area (sqm)",
+    pctschool = "Percent Schools with Access",
+    ) %>%
+  cols_align(align = "center", columns = everything()) %>%
+  fmt_number(columns = c(2, 3, 4, 5, 6, 7), decimals = 0) %>%
+  fmt_number(columns = c(8, 9, 10), decimals = 1) %>%
+  cols_move(
+    columns = 6,
+    after = 8) %>%
+  cols_move(
+    columns = 7,
+    after = 2)
+
+gt_table
+```
